@@ -15,7 +15,7 @@ setup(
     license='BSD License',
     description='Djaken is a complete web-based notes application for Django.',
     long_description=README,
-    url='https://github.com/ethoms/djaken/',
+    url='https://github.com/ethoms/django-djaken/',
     author='Euan Thoms',
     author_email='euan@potensol.com',
     classifiers=[
