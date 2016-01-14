@@ -1,0 +1,25 @@
+{% extends 'djaken/base.html' %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "djaken/css/unlock_note.css" %}" />
+{% endblock %}
+ 
+{% block title %}{{note.title}} | {{ site_title|default:_('Djaken') }}{% endblock %}
+ 
+{% block content %}
+    <div class="note_content">
+        <form action="{% url 'djaken:unlock_note' note.pk %}" method="post">
+            {% csrf_token %}
+            <br>
+            <label for="encrypt_pass">{% trans 'Encryption Password' %}</label>
+            <input type="password" name="encrypt_pass" id="encrypt_pass" value="" autofocus required />
+            <br>
+            <br>
+            <hr>
+            <br>
+            <input type="hidden" name="next_url" id="next_url" value="{{ next_url }}" />
+            <input type="submit" id="unlock_note" value="{% trans 'Unlock Note' %}" />
+        </form>
+    </div>
+{% endblock %}
