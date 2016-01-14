@@ -9,7 +9,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-djaken',
-    version='1.0rc1',
+    version='1.0rc2',
     packages=['djaken'],
     include_package_data=True,
     license='BSD License',

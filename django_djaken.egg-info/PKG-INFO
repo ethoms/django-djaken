@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: django-djaken
-Version: 1.0rc1
+Version: 1.0rc2
 Summary: Djaken is a complete web-based notes application for Django.
 Home-page: https://github.com/ethoms/djaken/
 Author: Euan Thoms
