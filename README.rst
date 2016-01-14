@@ -8,9 +8,9 @@ Features
 
 * Intuitive, simple and stream-lined user interface.
 * Login/logout of the notes application.
-* Create and modify notes in Markdown.
-* Attach images within notes.
-* Notes can be marked 'Not relevant' and kept out of view by default.
+* Create and edit notes in Markdown.
+* Attach images within a note.
+* Notes can be marked 'Not relevant' and are kept out of view by default.
 * Encrypted notes (stored in database using an AES symmetric cipher).
 * Keyword search of note title and content.
 * Sort by modified/created date.
