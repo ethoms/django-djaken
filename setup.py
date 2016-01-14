@@ -32,10 +32,7 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
-    install_requires={
-        'Django>=1.7',
-        'Markdown>=2.0',
-    },
+    install_requires=['Django>=1.7','Markdown>=2.0',],
+    keywords='django notes markdown encrypt',
 )
 
-keywords='django notes markdown encrypt',
