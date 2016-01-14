@@ -6,14 +6,42 @@ Home-page: https://github.com/ethoms/djaken/
 Author: Euan Thoms
 Author-email: euan@potensol.com
 License: BSD License
-Description: =====
-        Djaken Notes
-        =====
+Description: Djaken Notes
+        ============
         
         Djaken is a complete web-based notes application for Django.
         
+        Features
+        ~~~~~~~~
+        
+        * Intuitive, simple and stream-lined user interface.
+        * Login/logout of the notes application.
+        * Create and modify notes in Markdown.
+        * Attach images within notes.
+        * Notes can be marked 'Not relevant' and kept out of view by default.
+        * Encrypted notes (stored in database using an AES symmetric cipher).
+        * Keyword search of note title and content.
+        * Sort by modified/created date.
+        * Automatically add Markdown tags to HTTP URLs (optional).
+        * Automatically add Markdown line-breaks for new lines (optional).
+        
+        Options / Settings
+        ~~~~~~~~~~~~~~~~~~
+        
+        * DJAKEN_MARKDOWN_AUTO_ADD_LINE_BREAKS (bool:default=True)
+        * DJAKEN_MARKDOWN_AUTO_ADD_LINK_TAGS (bool:default=True)
+        * DJAKEN_BRANDING_TITLE (str:default='Djaken Notes')
+        
+        Requirements
+        ~~~~~~~~~~~~
+        
+        * Django>=1.7
+        * Markdown>=2.0
+        * pycrypto>=2.6
+        
+        
         Quick start
-        -----------
+        ~~~~~~~~~~~
         
         1. Add "djaken" to your INSTALLED_APPS setting like this::
         
@@ -30,6 +58,8 @@ Description: =====
         
         4. Start the development server and visit http://127.0.0.1:8000/djaken/
            to start adding notes.
+        
+        
         
 Keywords: django notes markdown encrypt
 Platform: UNKNOWN
