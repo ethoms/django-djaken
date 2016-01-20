@@ -55,13 +55,17 @@ Screen-shots
 ~~~~~~~~~~~~
 
 All Notes (homepage)  
+
 .. image:: screenshots/djaken-all_notes-1.png
 
 View Note  
+
 .. image:: screenshots/djaken-view_note-1.png
 
 Edit Note  
+
 .. image:: screenshots/djaken-edit_note-1.png
 
 Unlock an encrypted note  
+
 .. image:: screenshots/djaken-unlock_note-1.png
