@@ -51,4 +51,7 @@ Quick start
 4. Start the development server and visit http://127.0.0.1:8000/djaken/
    to start adding notes.
 
+Screen-shots
+~~~~~~~~~~~~
 
+.. image:: screenshots/djaken-all_notes-1.png
