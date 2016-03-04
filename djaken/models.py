@@ -59,10 +59,12 @@ class Note(models.Model):
     def autoAddLinkTags(self, mdText):
 
         mdTextWithLinkTags = mdText
+        codeVertices = []
         urlVertices = []
+        urlVerticesNotInCode = []
         urlVerticesUntagged = []
 
-        # First we find the vertices (start and end of the URL), inclusive off any existing end tags ('>' or ')').
+        # First we find the URL vertices (start and end of the URL), inclusive off any existing end tags ('>' or ')').
         # A vertex is represented as a tuple (a,b) where 'a' is the index of "h" (in "http://...") and 'b' is the index of the last character in the URL.
 
         for cIndex in range(len(mdText)):
@@ -82,10 +84,50 @@ class Note(models.Model):
                             urlVertices.append((cIndex, cIndexOffset))
                         break
 
+
+        # Next we find the code vertices (start and end of) any code blocks (four spaces at start of line).
+
+        if mdText[0 : 4] == "    ":
+            for cIndexCODE in range(len(mdText) - 4):
+                cIndexOffset = cIndexCODE + 4
+                if cIndexOffset > (len(mdText) - 2):
+                    codeVertices.append((4, len(mdText) - 1 ))
+                    break
+                if mdText[cIndexOffset : cIndexOffset + 2] == "\r\n":
+                    codeVertices.append((4, cIndexOffset - 1))
+                    break
+
+        for cIndex in range(len(mdText)):
+            if ( cIndex < (len(mdText) - 8) and ( mdText[cIndex : cIndex + 6] == "\r\n    ") ):
+                for cIndexCODE in range(len(mdText) - cIndex - 6):
+                    cIndexOffset = cIndexCODE + cIndex + 6
+                    if cIndexOffset > (len(mdText) - 2):
+                        codeVertices.append((cIndex + 6, len(mdText) -1 ))
+                        break
+                    if mdText[cIndexOffset : cIndexOffset + 2] == "\r\n":
+                        codeVertices.append((cIndex + 6, cIndexOffset - 1))
+                        break
+
+
+        # Next we remove any vertices inside a code block.
+
+        for vertex in urlVertices:
+            linkIndexFirst = vertex[0]
+            linkIndexLast = vertex[1]
+            withinCode = False
+            for codeVertex in codeVertices:
+                codeIndexFirst = codeVertex[0]
+                codeIndexLast = codeVertex[1]
+                if linkIndexFirst >= codeIndexFirst and linkIndexLast <= codeIndexLast:
+                    withinCode = True
+                    break
+            if not withinCode:
+                urlVerticesNotInCode.append(vertex)
+
+
         # Next we remove any vertices of already tagged URLs.
 
-        for i in range(len(urlVertices)):
-            vertex = urlVertices[i]
+        for vertex in urlVerticesNotInCode:
             linkIndexFirst = vertex[0]
             linkIndexLast = vertex[1]
             if not ( (linkIndexFirst > 0 and mdText[linkIndexFirst - 1] == "<" and linkIndexLast < (len(mdText) -1) and mdText[linkIndexLast + 1] == ">")
@@ -93,6 +135,7 @@ class Note(models.Model):
                      (linkIndexFirst > 1 and mdText[linkIndexFirst - 2] == "]" and mdText[linkIndexFirst - 1] == "(" and linkIndexLast < (len(mdText) - 1) and mdText[linkIndexLast + 1] == ")") 
                    ):
                 urlVerticesUntagged.append(vertex)
+
 
         # Then we insert tags around the untagged URL vertices.
 
@@ -127,15 +170,16 @@ class Note(models.Model):
         return html
 
 
-    def save(self, force_insert=False, force_update=False):
+    def save(self, saveRelevancyOnly=False, force_insert=False, force_update=False):
 
-        if self.is_encrypted:
-            encryption_key = self.encryption_key
-            self.encryption_key = ""
-            self.encryption_iv, self.content_encrypted = self.encrypt(self.content, encryption_key)
-            self.content = "*This note is encrypted.*"
-
-        self.content_html = self.get_html_from_markdown(self.content)
+        if not saveRelevancyOnly:
+            if self.is_encrypted:
+                encryption_key = self.encryption_key
+                self.encryption_key = ""
+                self.encryption_iv, self.content_encrypted = self.encrypt(self.content, encryption_key)
+                self.content = "*This note is encrypted.*"
+    
+            self.content_html = self.get_html_from_markdown(self.content)
 
         super(Note, self).save(force_insert, force_update)
 

@@ -68,7 +68,7 @@ h1,h2,h3,h4,h5 {
 }
 
 h1 {
-    margin: 0 0 20px;
+    margin: 2em 0 .5em 0;
     font-size: 20px;
     color: #666;
 }
@@ -499,7 +499,7 @@ ul.messagelist li {
     font-weight: 400;
     font-size: 13px;
     padding: 10px 10px 10px 65px;
-    margin: 0 0 10px 0;
+    margin: 0;
     background: #dfd url(../img/icon-yes.svg) 40px 12px no-repeat;
     background-size: 16px auto;
     color: #333;
@@ -631,6 +631,7 @@ div.breadcrumbs a:focus, div.breadcrumbs a:hover {
 
 div.content_title h1 {
     background: #8fcfec;
+    margin: 0 0 20px 0;
     padding: 10px 40px;
     border: none;
     font-size: 16px;

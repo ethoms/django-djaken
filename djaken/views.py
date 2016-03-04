@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.views import generic
+from django.views.decorators.cache import cache_control
 from djaken.models import Note
 from django.conf import settings
 from django.db.models import Q
@@ -163,6 +164,7 @@ class ViewNote(generic.DetailView):
 
     next_url = None
 
+    @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
     def get(self, request, pk, **kwargs):
 
         options = dict(kwargs)
@@ -174,7 +176,7 @@ class ViewNote(generic.DetailView):
                     self.note.relevant = False
                 else:
                     self.note.relevant = True
-                self.note.save()
+                self.note.save(True)
             if self.note.is_encrypted:
                 self.next_url = 'djaken/view_note.html'
                 return render(request, 'djaken/unlock_note.html', self.get_context_data(request))
@@ -198,11 +200,11 @@ class ViewNote(generic.DetailView):
         }
         return context
 
-
 class EditNote(generic.DetailView):
 
     next_url = None
 
+    @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
     def get(self, request, pk):
 
         if request.user.is_active:
@@ -234,6 +236,7 @@ class UnlockNote(generic.DetailView):
 
     next_url = None
                 
+    @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
     def post(self, request, pk):
 
         if request.user.is_active:

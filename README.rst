@@ -3,6 +3,18 @@ Djaken Notes
 
 Djaken is a complete web-based notes application for Django.
 
+News
+~~~~
+
+Version 1.0rc3 released with the following changes:
+
+* FIXED: **CRITICAL BUG**; changing relevancy on encrypted notes causes note to be
+  unable to unlock.
+* FIXED: unwanted space under info / warning / error notifications.
+* FIXED: more space needed above h1 elements (markdown title).
+* FIXED: turn off client-side caching for notes pages (view_note and edit_note).
+* FIXED: auto http link tagging should not apply to code blocks.
+
 Features
 ~~~~~~~~
 

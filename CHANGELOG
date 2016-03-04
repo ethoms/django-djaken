@@ -1,0 +1,12 @@
+Changelog
+========
+
+1.0rc3 (2016/04/03)
+~~~~~~~~~~~~~~~~~~~
+
+* FIXED: **CRITICAL BUG**; changing relevancy on encrypted notes causes note to be
+  unable to unlock.
+* FIXED: unwanted space under info / warning / error notifications.
+* FIXED: more space needed above h1 elements (markdown title).
+* FIXED: turn off client-side caching for notes pages (view_note and edit_note).
+* FIXED: auto http link tagging should not apply to code blocks.
