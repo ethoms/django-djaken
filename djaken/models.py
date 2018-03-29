@@ -159,11 +159,11 @@ class Note(models.Model):
         
         markdown_content = markdown_text
         
-        if getattr(settings, "DJAKEN_MARKDOWN_AUTO_ADD_LINK_TAGS", True):
+        if getattr(settings, "DJAKEN_MARKDOWN_AUTO_ADD_LINK_TAGS", False):
             markdown_content = self.autoAddLinkTags(markdown_content)
 
  
-        if getattr(settings, "DJAKEN_MARKDOWN_AUTO_ADD_LINE_BREAKS", True):
+        if getattr(settings, "DJAKEN_MARKDOWN_AUTO_ADD_LINE_BREAKS", False):
             markdown_content = self.autoAddLineBreaks(markdown_content)
 
         html = markdown.markdown(markdown_content)

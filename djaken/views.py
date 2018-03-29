@@ -82,7 +82,7 @@ class AllNotes(generic.DetailView):
     def get(self, request, **kwargs):
 
         options = dict(kwargs)
-        print("options = ", options)
+        print("AllNotes::get: options = ", options)
 
         ## Set some defaults
         sort_order = ['-relevant','-modified','-created']
@@ -164,10 +164,11 @@ class ViewNote(generic.DetailView):
 
     next_url = None
 
-    @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
+    @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)  # this seems to have no effect in generic views
     def get(self, request, pk, **kwargs):
 
         options = dict(kwargs)
+        print("ViewNote::get: options = ", options)
 
         if request.user.is_active:
             self.note = get_object_or_404(Note, pk=pk, author=request.user)
@@ -204,8 +205,11 @@ class EditNote(generic.DetailView):
 
     next_url = None
 
-    @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
-    def get(self, request, pk):
+    @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)  # this seems to have no effect in generic view
+    def get(self, request, pk, **kwargs):
+
+        options = dict(kwargs)
+        print("EditNote::get: options = ", options)
 
         if request.user.is_active:
             self.note = get_object_or_404(Note, pk=pk, author=request.user)
@@ -235,9 +239,18 @@ class EditNote(generic.DetailView):
 class UnlockNote(generic.DetailView):
 
     next_url = None
-                
-    @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
+
+    def get(self, request, pk, **kwargs):
+
+        options = dict(kwargs)
+        print("UnlockNote::get: options = ", options)
+
+        return redirect('/view_note/' + pk + '/')
+
+    @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)  # this seems to have no effect in generic view
     def post(self, request, pk):
+
+        print("UnlockNote::post:")
 
         if request.user.is_active:
             self.note = get_object_or_404(Note, pk=pk, author=request.user)
