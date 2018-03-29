@@ -24,14 +24,14 @@ More news to follow about these new changes.
 **Changes in 1.0**
 
 * FIXED: encrypted notes; unlock_note url without form data ('get' instead
-         of 'post') should redirect to view_note instead of generating a 
-         django error.
+  of 'post') should redirect to view_note instead of generating a 
+  django error.
 * POLICY CHANGE: The options DJAKEN_MARKDOWN_AUTO_ADD_LINE_BREAKS and 
-                 DJAKEN_MARKDOWN_AUTO_ADD_LINK_TAGS are now set to False 
-                 by default. This is due to the required text analysis can 
-                 cause performance issues with large inline attached images.
-                 To keep the same behaviour, the option(s) will need to be 
-                 set to True in the projects settings.py
+  DJAKEN_MARKDOWN_AUTO_ADD_LINK_TAGS are now set to False 
+  by default. This is due to the required text analysis can 
+  cause performance issues with large inline attached images.
+  To keep the same behaviour, the option(s) will need to be 
+  set to True in the projects settings.py
 
 Version 1.0rc3 released with the following changes:
 ---------------------------------------------------
