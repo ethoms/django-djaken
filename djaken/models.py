@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
-import markdown
+from docutils.core import publish_parts
 from Crypto.Cipher import AES
 from Crypto import Random
 import base64
@@ -21,152 +21,12 @@ class Note(models.Model):
     encryption_iv = models.CharField(max_length=64, editable=False)    # don't want to see this in Admin
     encryption_key = ""                                                # Only used momentarily to pass the key to the save function
 
-    def autoAddLineBreaks(self, mdText):
 
-        mdTextWithLineBreaks = ""
-  
-        for cIndex in range(len(mdText)):
-            if ( 
-                   ( cIndex == 1 and mdText[cIndex : cIndex + 2] == "\r\n" ) 
-                   or 
-                   ( 
-                       cIndex > 1 and cIndex < (len(mdText) - 1) 
-                       and  
-                       mdText[cIndex : cIndex + 2] == "\r\n" 
-                       and 
-                       mdText[cIndex - 2 : cIndex] != "\r\n" 
-                       and not 
-                       ( 
-                           cIndex < (len(mdText) - 3) 
-                           and 
-                           mdText[cIndex + 2 : cIndex + 4] == "\r\n" 
-                       ) 
-                       and not 
-                       ( 
-                           cIndex > 2 and mdText[cIndex - 2 : cIndex] == "  " 
-                       ) 
-                   ) 
-               ):
-                nextChars = "  " + mdText[cIndex]
-            else:
-                nextChars = mdText[cIndex]
+    def get_html_from_reST(self, reST_text):
  
-            mdTextWithLineBreaks = mdTextWithLineBreaks + nextChars
+        reST_content = reST_text
 
-        return mdTextWithLineBreaks
-
-
-    def autoAddLinkTags(self, mdText):
-
-        mdTextWithLinkTags = mdText
-        codeVertices = []
-        urlVertices = []
-        urlVerticesNotInCode = []
-        urlVerticesUntagged = []
-
-        # First we find the URL vertices (start and end of the URL), inclusive off any existing end tags ('>' or ')').
-        # A vertex is represented as a tuple (a,b) where 'a' is the index of "h" (in "http://...") and 'b' is the index of the last character in the URL.
-
-        for cIndex in range(len(mdText)):
-            if ( cIndex < (len(mdText) - 10) and ( mdText[cIndex : cIndex + 7] == "http://" or mdText[cIndex : cIndex + 8] == "https://") ):
-                for cIndexURL in range(len(mdText) - cIndex - 7):
-                    cIndexOffset = cIndexURL + cIndex + 7
-                    if ( mdText[cIndexOffset : cIndexOffset + 1] == " " ) or ( mdText[cIndexOffset : cIndexOffset + 2] == "\r\n" ):
-                        if mdText[cIndexOffset - 1] == ")" or mdText[cIndexOffset - 1] == ">":
-                            urlVertices.append((cIndex, cIndexOffset - 2))
-                        else:
-                            urlVertices.append((cIndex, cIndexOffset - 1))
-                        break
-                    elif ( cIndexOffset == (len(mdText) - 1) ):
-                        if mdText[cIndexOffset] == ")" or mdText[cIndexOffset] == ">":
-                            urlVertices.append((cIndex, cIndexOffset - 1))
-                        else:
-                            urlVertices.append((cIndex, cIndexOffset))
-                        break
-
-
-        # Next we find the code vertices (start and end of) any code blocks (four spaces at start of line).
-
-        if mdText[0 : 4] == "    ":
-            for cIndexCODE in range(len(mdText) - 4):
-                cIndexOffset = cIndexCODE + 4
-                if cIndexOffset > (len(mdText) - 2):
-                    codeVertices.append((4, len(mdText) - 1 ))
-                    break
-                if mdText[cIndexOffset : cIndexOffset + 2] == "\r\n":
-                    codeVertices.append((4, cIndexOffset - 1))
-                    break
-
-        for cIndex in range(len(mdText)):
-            if ( cIndex < (len(mdText) - 8) and ( mdText[cIndex : cIndex + 6] == "\r\n    ") ):
-                for cIndexCODE in range(len(mdText) - cIndex - 6):
-                    cIndexOffset = cIndexCODE + cIndex + 6
-                    if cIndexOffset > (len(mdText) - 2):
-                        codeVertices.append((cIndex + 6, len(mdText) -1 ))
-                        break
-                    if mdText[cIndexOffset : cIndexOffset + 2] == "\r\n":
-                        codeVertices.append((cIndex + 6, cIndexOffset - 1))
-                        break
-
-
-        # Next we remove any vertices inside a code block.
-
-        for vertex in urlVertices:
-            linkIndexFirst = vertex[0]
-            linkIndexLast = vertex[1]
-            withinCode = False
-            for codeVertex in codeVertices:
-                codeIndexFirst = codeVertex[0]
-                codeIndexLast = codeVertex[1]
-                if linkIndexFirst >= codeIndexFirst and linkIndexLast <= codeIndexLast:
-                    withinCode = True
-                    break
-            if not withinCode:
-                urlVerticesNotInCode.append(vertex)
-
-
-        # Next we remove any vertices of already tagged URLs.
-
-        for vertex in urlVerticesNotInCode:
-            linkIndexFirst = vertex[0]
-            linkIndexLast = vertex[1]
-            if not ( (linkIndexFirst > 0 and mdText[linkIndexFirst - 1] == "<" and linkIndexLast < (len(mdText) -1) and mdText[linkIndexLast + 1] == ">")
-                     or 
-                     (linkIndexFirst > 1 and mdText[linkIndexFirst - 2] == "]" and mdText[linkIndexFirst - 1] == "(" and linkIndexLast < (len(mdText) - 1) and mdText[linkIndexLast + 1] == ")") 
-                   ):
-                urlVerticesUntagged.append(vertex)
-
-
-        # Then we insert tags around the untagged URL vertices.
-
-        for i in range(len(urlVerticesUntagged)):
-            vertex = urlVerticesUntagged[i]
-            if i == 0:
-                mdTextWithLinkTags = mdText[0:vertex[0]]
-            else:
-                previousVertex = urlVerticesUntagged[i-1]
-                mdTextWithLinkTags = mdTextWithLinkTags + mdText[ previousVertex[1] + 1 : vertex[0] ]
-            mdTextWithLinkTags = mdTextWithLinkTags + "<"
-            mdTextWithLinkTags = mdTextWithLinkTags + mdText[ vertex[0] : vertex[1] + 1 ]
-            mdTextWithLinkTags = mdTextWithLinkTags + ">"
-            if i == len(urlVerticesUntagged) - 1:
-                mdTextWithLinkTags = mdTextWithLinkTags + mdText[vertex[1] + 1 :]
-
-        return mdTextWithLinkTags
-
-
-    def get_html_from_markdown(self, markdown_text):
-        
-        markdown_content = markdown_text
-        
-        if getattr(settings, "DJAKEN_MARKDOWN_AUTO_ADD_LINK_TAGS", False):
-            markdown_content = self.autoAddLinkTags(markdown_content)
-
- 
-        if getattr(settings, "DJAKEN_MARKDOWN_AUTO_ADD_LINE_BREAKS", False):
-            markdown_content = self.autoAddLineBreaks(markdown_content)
-
-        html = markdown.markdown(markdown_content)
+        html = publish_parts(reST_content, writer_name='html')['html_body']
         return html
 
 
@@ -178,8 +38,8 @@ class Note(models.Model):
                 self.encryption_key = ""
                 self.encryption_iv, self.content_encrypted = self.encrypt(self.content, encryption_key)
                 self.content = "*This note is encrypted.*"
-    
-            self.content_html = self.get_html_from_markdown(self.content)
+
+            self.content_html = self.get_html_from_reST(self.content)
 
         super(Note, self).save(force_insert, force_update)
 
@@ -187,7 +47,7 @@ class Note(models.Model):
     def get_unencrypted_content(self, encryption_key):
         unencrypted_content = self.decrypt(self.content_encrypted, encryption_key)
         if unencrypted_content:
-            unencrypted_content_html = self.get_html_from_markdown(unencrypted_content)
+            unencrypted_content_html = self.get_html_from_reST(unencrypted_content)
             return True, unencrypted_content, unencrypted_content_html
         else:
             return False, "", ""
@@ -212,11 +72,11 @@ class Note(models.Model):
             cipher = AES.new( key, AES.MODE_CFB, iv) 
             decrypted_text_encoded = cipher.decrypt(encrypted_bytes)
             decrypted_text = decrypted_text_encoded.decode('utf-8')
-    
+
             return decrypted_text
         except:
             return False
 
-
     class Meta:
         ordering = ['-relevant', '-modified']
+
