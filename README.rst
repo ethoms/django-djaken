@@ -62,8 +62,8 @@ Features
 Options / Settings
 ~~~~~~~~~~~~~~~~~~
 
-* DJAKEN_MARKDOWN_AUTO_ADD_LINE_BREAKS (bool:default=True)
-* DJAKEN_MARKDOWN_AUTO_ADD_LINK_TAGS (bool:default=True)
+* DJAKEN_MARKDOWN_AUTO_ADD_LINE_BREAKS (bool:default=False)
+* DJAKEN_MARKDOWN_AUTO_ADD_LINK_TAGS (bool:default=False)
 * DJAKEN_BRANDING_TITLE (str:default='Djaken Notes')
 
 
