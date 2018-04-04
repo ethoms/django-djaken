@@ -2,3 +2,4 @@ include LICENSE
 include README.rst
 recursive-include djaken/static *
 recursive-include djaken/templates *
+recursive-include djaken/migrations *
