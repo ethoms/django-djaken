@@ -7,6 +7,14 @@ Djaken is a complete web-based notes application for Django.
 News
 ~~~~
 
+Version 1.0.1 released (05/04/2018)
+-----------------------------------
+
+** Changes in 1.0.1**
+
+* FIXED: added missing initial migrations
+
+
 Version 1.0 released! (30th March 2018)
 ---------------------------------------
 
@@ -32,6 +40,7 @@ More news to follow about these new changes.
   cause performance issues with large inline attached images.
   To keep the same behaviour, the option(s) will need to be 
   set to True in the projects settings.py
+
 
 Version 1.0rc3 released with the following changes:
 ---------------------------------------------------

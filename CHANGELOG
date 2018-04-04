@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.0.1 (2018/04/05)
+~~~~~~~~~~~~~~~~~~
+
+* FIXED: added missing initial migrations
+
+
 1.0 (2018/03/30)
 ~~~~~~~~~~~~~~~~
 
@@ -12,6 +18,7 @@ Changelog
   This is due to the required text analysis can cause performance issues 
   with large inline attached images. To keep the same behaviour, the 
   option(s) will need to be set to True in the projects settings.py
+
 
 1.0rc3 (2016/04/03)
 ~~~~~~~~~~~~~~~~~~~
