@@ -9,6 +9,7 @@ from django.conf import settings
 from django.db.models import Q
 import ast
 from djaken.models import Note
+from djaken.models import Image
 
 """
 Message examples
@@ -53,7 +54,7 @@ def login(request, extra_context=None):
         context[REDIRECT_FIELD_NAME] = reverse('djaken:all_notes', current_app='djaken')
 
     context.update(extra_context or {})
-    
+
     defaults = {
         'extra_context': context,
         'authentication_form': AdminAuthenticationForm,
@@ -89,16 +90,16 @@ def all_notes(request, **kwargs):
             options = dict(kwargs)  
             print("all_notes::get: options = ", options)
 
-            ## Set some defaults
+            # Set some defaults
             sort_order = ['-relevant','-modified','-created']
             only_relevant = True
             search_text = ""
-    
+ 
             query_string_flat = request.META['QUERY_STRING'].replace('%20', ' ').replace('%27',"'").replace('%5B','[').replace('%5D',']')
-    
+ 
             if query_string_flat != "":
                 query_strings = query_string_flat.split('&', query_string_flat.count('&'))
-    
+
                 for query_string in query_strings:
                     if 'sort_order=' in query_string:
                         try:
@@ -118,13 +119,13 @@ def all_notes(request, **kwargs):
                             search_text = str(search_string)
                         except:
                             pass
-    
+
             if 'toggle_relevant' in options.keys():
                 if only_relevant == True:
                     only_relevant = False
                 else:
                     only_relevant = True
-    
+
             if 'sort_by' in options.keys():
                 sort_by = options['sort_by']
                 if sort_by in sort_order:
@@ -317,8 +318,13 @@ def save_note(request, pk, **kwargs):
             note = get_object_or_404(Note, pk=pk, author=request.user)
             new_title = request.POST['note_title']
             new_content = request.POST['note_content']
+            image_data = request.POST['preview_image_data']
             is_encrypted =  bool(request.POST.get('is_encrypted', False))
             encryption_key = request.POST['encrypt_pass']
+
+            if image_data is not "":
+                image = note.image_set.create(image_data=image_data)
+                new_content += "\r\n\r\n.. image:: [[[" + str(image.id) + "]]]\r\n\r\n"
 
             note.title = new_title
             note.content = new_content

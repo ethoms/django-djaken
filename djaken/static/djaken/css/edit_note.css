@@ -31,6 +31,15 @@ p.view_note {
     text-align: right;
 }
 
+a.erase_button {
+    background: url(../img/icon-erase.png) no-repeat center;
+    background-size: cover;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    margin: 0 5px;
+}
+
 a.save_button {
     background: url(../img/icon-save.png) no-repeat center;
     background-size: cover;
@@ -40,8 +49,8 @@ a.save_button {
     margin: 0 5px;
 }
 
-a.revert_button {
-    background: url(../img/icon-revert.png) no-repeat center;
+a.view_button {
+    background: url(../img/icon-view.png) no-repeat center;
     background-size: cover;
     width: 24px;
     height: 24px;
@@ -49,14 +58,15 @@ a.revert_button {
     margin: 0 5px;
 }
 
-div.note_content input[type=text] {
+div.note_content input[type=text], div.note_content textarea {
+    font-family: 'Roboto Mono';
+    font-style: normal;
+    font-weight: 400;
     margin: 5px 0;
     width: 98%;
 }
 
 div.note_content textarea {
-    margin: 5px 0;
-    width: 98%;
     height: 400px;
 }
 
@@ -64,15 +74,15 @@ img#image_preview {
     margin: 10px 5px;
 }
 
-div.image_attach {
+div.image_attach_selector {
     margin: 10px 5px;
-    width: 64px;
+    width: 48px;
     height: 48px;
-    background: url('../img/image-upload-icon.png');
+    background: url('../img/icon-image-attach.png');
     overflow: hidden;
 }
 
-div.image_attach input {
+div.image_attach_selector input {
     width: 64px !important;
     height: 48px !important;
     display: block !important;

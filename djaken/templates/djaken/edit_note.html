@@ -19,10 +19,10 @@
                     <table class="inner">
                         <tr>
                             <td class="control_button">
-                                <a class="revert_button" href="{% url 'djaken:view_note' note.pk %}"></a>
+                                <a class="view_button" title="View note" href="{% url 'djaken:view_note' note.pk %}"></a>
                             </td>
                             <td class="control_button">
-                                <a class="save_button" onclick="return continueAfterSave()"></a>
+                                <a class="save_button" title="Save note" onclick="return continueAfterSave()"></a>
                             </td>
                         </tr>
                     </table>
@@ -51,20 +51,24 @@
             <br>
             <hr>
             <br>
-            <label for="image_attach">{% trans 'Attach Image' %}</label>
+            <label for="image_attach_selector">{% trans 'Attach Image' %}</label>
             <br>
-            <table class="image_attach"><tr><td>
-            <div class="image_attach">
-                <input type="file" name="image_attach" id="image_attach" accept="image/gif, image/jpeg, image/png" onchange="readURL(this)"/>
-            </div>
-            </td></tr></table>
+            <table class="image_attach"><tr>
+            <td><div class="image_attach_selector">
+            <input type="file" name="image_attach_selector" id="image_attach_selector" title="Select image" accept="image/gif, image/jpeg, image/png" onchange="readURL(this)"/>
+            </div></td>
+            <td><a class="save_button" id="image_attach_save" title="Save selected image" style="display: none" onclick="return continueAfterSave()"></a></td>
+            <td><a class="erase_button" id="image_attach_clear" title="Clear selected image" style="display: none" onclick="return clearImageAttach()"></a></td>
+            </tr></table>
             <br>
             <label for="image_preview">{% trans 'Image Preview' %}</label>
             <br>
             <img id="image_preview" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAIAAAABc2X6AAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAqElEQVR4nO3csQ3AIAwAQRMxGINQMhqDMFpmcKrw/quDpRcVspS21opKekTMOVNnzjmp78cYP5m/935SowEMpjOYzmA6g+kMpjOYzmC6Hje/bz/ML3fDBtMZTGcwncF0BtMZTGcwXY/L37ep+e6HCzCYzmA6g+kMpjOYzmC6csHuh+kMpjOYzmA6g+kMpjOYzmA698N0BtMZTGcwncF0BtMZTNeq/V7qBQTYLdl+Vm1PAAAAAElFTkSuQmCC" alt="Attached Image" />
             <br>
+            <br>
             <hr>
             <br>
+            <input type="hidden" name="preview_image_data" id="preview_image_data" value="" />
             <input type="hidden" name="continue_after_save" id="continue_after_save" value="False" />
             <input type="submit" id="save_form" value="{% trans 'Save & Close' %}" />
         </form>
@@ -96,20 +100,47 @@
             </time>
         </p>
     </div>
-    <script>
+    <script = "text/javascript">
+        function toggleImageAttachSaveButton() {
+            var btn = document.getElementById("image_attach_save");
+            if (btn.style.display === "none")
+            {
+                btn.style.display = "block";
+            }
+            else
+            {
+                btn.style.display = "none";
+            }
+        }
+        function toggleImageAttachClearButton() {
+            var btn = document.getElementById("image_attach_clear");
+            if (btn.style.display === "none")
+            {
+                btn.style.display = "block";
+            }
+            else
+            {
+                btn.style.display = "none";
+            }
+        }
+        function clearImageAttach() {
+            document.getElementById("image_preview").src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAIAAAABc2X6AAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAqElEQVR4nO3csQ3AIAwAQRMxGINQMhqDMFpmcKrw/quDpRcVspS21opKekTMOVNnzjmp78cYP5m/935SowEMpjOYzmA6g+kMpjOYzmC6Hje/bz/ML3fDBtMZTGcwncF0BtMZTGcwXY/L37ep+e6HCzCYzmA6g+kMpjOYzmC6csHuh+kMpjOYzmA6g+kMpjOYzmA698N0BtMZTGcwncF0BtMZTNeq/V7qBQTYLdl+Vm1PAAAAAElFTkSuQmCC";
+            document.getElementById("preview_image_data").value = "";
+            toggleImageAttachSaveButton();
+            toggleImageAttachClearButton();
+        }
         function readURL(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function (e) {
-                    $('#image_preview')
-                    .attr('src', e.target.result)
-                    document.getElementById("note_content").value += "\r\n\r\n![Attached Image](" + e.target.result + ")"
+                    $('#image_preview').attr('src', e.target.result)
+                    $('#preview_image_data').attr('value', e.target.result)
                 };
                 reader.readAsDataURL(input.files[0]);
+                toggleImageAttachSaveButton();
+                toggleImageAttachClearButton();
             }
         }
-    </script>
-    <script ="text/javascript">
         function continueAfterSave() {
             document.getElementById("continue_after_save").value = "True";
             document.getElementById("save_form").click();

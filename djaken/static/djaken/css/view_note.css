@@ -31,6 +31,7 @@ a.edit_button {
 }
 
 div.note_content {
+    font-size: 12px;
     padding: 0 10px 40px 10px;
 }
 
