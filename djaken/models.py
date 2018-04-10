@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 from docutils.core import publish_parts
+from docutils.utils import SystemMessage
 from Crypto.Cipher import AES
 from Crypto import Random
 import base64
@@ -11,39 +12,57 @@ class Note(models.Model):
 
     author = models.ForeignKey('auth.User')
     title = models.CharField(max_length=255)
-    content = models.TextField()
-    content_html = models.TextField(editable=False)                    # don't want to see this in Admin
+    content = models.TextField(blank=True)
+    content_html = models.TextField(blank=True, editable=False)                    # don't want to see this in Admin
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     relevant = models.BooleanField(default=True)
-    is_encrypted = models.BooleanField(default=False, editable=False)  # don't want to see this in Admin
-    content_encrypted = models.TextField(editable=False)               # don't want to see this in Admin
-    encryption_iv = models.CharField(max_length=64, editable=False)    # don't want to see this in Admin
-    encryption_key = ""                                                # Only used momentarily to pass the key to the save function
+    is_encrypted = models.BooleanField(default=False, editable=False)              # don't want to see this in Admin
+    content_encrypted = models.TextField(blank=True, editable=False)               # don't want to see this in Admin
+    encryption_iv = models.CharField(blank=True, max_length=64, editable=False)    # don't want to see this in Admin
+    encryption_key = ""                                                            # Only used momentarily to pass the key to the save function
+    image_data_dict = {}
 
 
     def get_html_from_reST(self, reST_text):
  
         reST_content = reST_text
 
-        html = publish_parts(reST_content, writer_name='html')['html_body']
+        try:
+            html = publish_parts(reST_content, writer_name='html')['html_body']
+        except SystemMessage as e:
+            message = str(e.args[0]).replace('<',"&lt").replace('>',"&gt")
+            html = '<div class=publish_error><strong><i>Sorry, the publishing of this note from reStructuredText ' \
+                   'to HTML failed with the following message:</i></strong><br><br><pre>' \
+                   + message + '</pre></div>'
         return html
 
 
-    def save(self, saveRelevancyOnly=False, force_insert=False, force_update=False):
+    def save(self, saveRelevancyOnly=False, *args, **kwargs):
 
         if not saveRelevancyOnly:
             if self.is_encrypted:
                 encryption_key = self.encryption_key
-                self.encryption_key = ""
                 self.encryption_iv, self.content_encrypted = self.encrypt(self.content, encryption_key)
                 self.content = "*This note is encrypted.*"
                 self.content_html = self.get_html_from_reST(self.content)
+                images = self.image_set.all()
+                for image in images:
+                    if image.encryption_iv is not "":
+                        image.image_data = self.image_data_dict[str(image.id)]
+                    image.save()
             else:
+                for image_id in self.image_data_dict:
+                    image = self.image_set.get(pk=image_id)
+                    image.image_data = self.image_data_dict[str(image_id)]
+                    image.save()
                 expanded_content = self.expand_image_data(self.content)
                 self.content_html = self.get_html_from_reST(expanded_content)
 
-        super(Note, self).save(force_insert, force_update)
+            # Before saving, destroy temporary sensitive data
+            self.encryption_key = ""
+            self.image_data_dict = {}
+        super(Note, self).save(*args, **kwargs)
 
     def expand_image_data(self, collapsed_content):
 
@@ -75,12 +94,15 @@ class Note(models.Model):
             image_id_string = markupText[ vertexBegin : vertexEnd ]
             image_id = int(image_id_string[len_tagLHSpartB:len(image_id_string)-len_tagRHS])
 
-            try:
-                image = self.image_set.get(pk=image_id)
-            except (KeyError, Image.DoesNotExist):
-                image_data = broken_image_icon
+            if self.is_encrypted:
+                image_data = self.image_data_dict[str(image_id)]
             else:
-                image_data = image.image_data
+                try:
+                    image = self.image_set.get(pk=image_id)
+                except (KeyError, Image.DoesNotExist):
+                    image_data = broken_image_icon
+                else:
+                    image_data = image.image_data
             markupText = markupText[0:vertexBegin] + image_data + markupText[vertexEnd:len(markupText)]
             vertexOffset += len(image_data) - len(image_id_string)
 
@@ -88,8 +110,16 @@ class Note(models.Model):
         return expanded_content
 
     def get_unencrypted_content(self, encryption_key):
-        collapsed_unencrypted_content = self.decrypt(self.content_encrypted, encryption_key)
+
+        collapsed_unencrypted_content = self.decrypt(self.content_encrypted, encryption_key, self.encryption_iv)
         if collapsed_unencrypted_content:
+            images = self.image_set.all()
+            for image in images:
+                unencrypted_image_data = self.decrypt(image.encrypted_image_data, encryption_key, image.encryption_iv)
+                if (unencrypted_image_data):
+                    self.image_data_dict [str(image.id)] = unencrypted_image_data
+                else:
+                    self.image_data_dict [str(image.id)] = "Decrypt failed for image id = " + str(image.id)
             unencrypted_content = self.expand_image_data(collapsed_unencrypted_content)
             unencrypted_content_html = self.get_html_from_reST(unencrypted_content)
             return True, collapsed_unencrypted_content, unencrypted_content_html
@@ -98,6 +128,7 @@ class Note(models.Model):
 
 
     def encrypt(self, raw_text, raw_key):
+
         key = hashlib.md5(raw_key.encode('utf-8')).digest()
         iv = Random.new().read(AES.block_size)
         iv_encoded = base64.b64encode(iv)
@@ -108,10 +139,11 @@ class Note(models.Model):
         return iv_encoded, encrypted_text_encoded
 
 
-    def decrypt(self, encrypted_text_encoded, raw_key):
+    def decrypt(self, encrypted_text_encoded, raw_key, iv_encoded):
+
         try:
             key = hashlib.md5(raw_key.encode('utf-8')).digest()
-            iv = base64.b64decode(self.encryption_iv)
+            iv = base64.b64decode(iv_encoded)
             encrypted_bytes = base64.b64decode(encrypted_text_encoded)
             cipher = AES.new( key, AES.MODE_CFB, iv) 
             decrypted_text_encoded = cipher.decrypt(encrypted_bytes)
@@ -128,9 +160,17 @@ class Note(models.Model):
 class Image(models.Model):
 
     note = models.ForeignKey(Note, on_delete=models.CASCADE)
-    image_data = models.TextField(editable=False)                      # don't want to see this in Admin
+    image_data = models.TextField(blank=True, editable=False)                      # don't want to see this in Admin
+    encrypted_image_data = models.TextField(blank=True, editable=False)            # don't want to see this in Admin
+    encryption_iv = models.CharField(blank=True, max_length=64, editable=False)    # don't want to see this in Admin
 
     def save(self, *args, **kwargs):
+        if self.note.is_encrypted:
+            self.encryption_iv, self.encrypted_image_data = self.note.encrypt(self.image_data, self.note.encryption_key)
+            self.image_data = "*This_image_is_encrypted*"
+        else:
+            self.encrypted_image_data = ""
+            self.encryption_iv = ""
         super(Image, self).save(*args, **kwargs)
 
 

@@ -322,19 +322,21 @@ def save_note(request, pk, **kwargs):
             is_encrypted =  bool(request.POST.get('is_encrypted', False))
             encryption_key = request.POST['encrypt_pass']
 
-            if image_data is not "":
-                image = note.image_set.create(image_data=image_data)
-                new_content += "\r\n\r\n.. image:: [[[" + str(image.id) + "]]]\r\n\r\n"
-
             note.title = new_title
-            note.content = new_content
             note.is_encrypted = is_encrypted
             note.encryption_key = encryption_key
+
+            if image_data is not "":
+                image = note.image_set.create(image_data=image_data)
+                note.image_data_dict[str(image.id)] = image_data
+                new_content += "\r\n\r\n.. image:: [[[" + str(image.id) + "]]]\r\n\r\n"
+
+            note.content = new_content
             note.save()
 
             messages.info(request, ugettext_lazy("Note saved successfully!"))
             if is_encrypted:
-                messages.warning(request, ugettext_lazy("WARNING: don't forget the encryption password!"))
+                messages.warning(request, ugettext_lazy("Don't forget the encryption password!"))
             if request.POST['continue_after_save'] == "True":
                 return redirect('djaken:edit_note', pk=pk)
             else:
