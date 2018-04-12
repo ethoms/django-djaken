@@ -19,10 +19,13 @@
                     <table class="inner">
                         <tr>
                             <td class="control_button">
-                                <a class="view_button" title="View note" href="{% url 'djaken:view_note' note.pk %}"></a>
+                                <a class="save_and_view_button" title="Save and view note" onclick="return viewAfterSave()"></a>
                             </td>
                             <td class="control_button">
                                 <a class="save_button" title="Save note" onclick="return continueAfterSave()"></a>
+                            </td>
+                            <td class="control_button">
+                                <a class="view_button" title="View note" href="{% url 'djaken:view_note' note.pk %}"></a>
                             </td>
                         </tr>
                     </table>
@@ -67,12 +70,35 @@
             <br>
             <br>
             <hr>
-            <br>
             <input type="hidden" name="preview_image_data" id="preview_image_data" value="" />
             <input type="hidden" name="continue_after_save" id="continue_after_save" value="False" />
             <input type="submit" id="save_form" value="{% trans 'Save & Close' %}" />
+            <br>
         </form>
     </div>
+    <div class="controls">
+        <table class="outer">
+            <tr>
+                <td>
+                    <table class="inner">
+                        <tr>
+                            <td class="control_button">
+                                <a class="save_and_view_button" title="Save and view note" onclick="return viewAfterSave()"></a>
+                            </td>
+                            <td class="control_button">
+                                <a class="save_button" title="Save note" onclick="return continueAfterSave()"></a>
+                            </td>
+                            <td class="control_button">
+                                <a class="view_button" title="View note" href="{% url 'djaken:view_note' note.pk %}"></a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <br>
     <div class="footer">
         {% if note.is_encrypted %}
             <p class="encryption_icon"></p>
@@ -140,6 +166,10 @@
                 toggleImageAttachSaveButton();
                 toggleImageAttachClearButton();
             }
+        }
+        function viewAfterSave() {
+            document.getElementById("continue_after_save").value = "False";
+            document.getElementById("save_form").click();
         }
         function continueAfterSave() {
             document.getElementById("continue_after_save").value = "True";
