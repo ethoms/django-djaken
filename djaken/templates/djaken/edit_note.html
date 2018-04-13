@@ -44,11 +44,6 @@
             <textarea name="note_content" id="note_content">{{ note_content }}</textarea>
             <br>
             <br>
-            <label for="is_encrypted"> {% trans 'Encrypted' %} </label>
-            <input type="checkbox" name="is_encrypted" id="is_encrypted" value="is_encrypted" {% if note.is_encrypted %} checked {% endif %} onclick="is_encryptedClicked()" />
-            <input type="password" name="encrypt_pass" id="encrypt_pass" value="" {% if note.is_encrypted %} required {% endif %} />
-            <br>
-            <br>
             <hr>
             <br>
             <label for="image_attach_selector">{% trans 'Attach Image' %}</label>
@@ -64,6 +59,12 @@
             <label for="image_preview">{% trans 'Image Preview' %}</label>
             <br>
             <img id="image_preview" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAIAAAABc2X6AAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAqElEQVR4nO3csQ3AIAwAQRMxGINQMhqDMFpmcKrw/quDpRcVspS21opKekTMOVNnzjmp78cYP5m/935SowEMpjOYzmA6g+kMpjOYzmC6Hje/bz/ML3fDBtMZTGcwncF0BtMZTGcwXY/L37ep+e6HCzCYzmA6g+kMpjOYzmC6csHuh+kMpjOYzmA6g+kMpjOYzmA698N0BtMZTGcwncF0BtMZTNeq/V7qBQTYLdl+Vm1PAAAAAElFTkSuQmCC" alt="{% trans 'Attached Image' %}" />
+            <br>
+            <hr>
+            <br>
+            <label for="is_encrypted"> {% trans 'Encrypted' %} </label>
+            <input type="checkbox" name="is_encrypted" id="is_encrypted" value="is_encrypted" {% if note.is_encrypted %} checked {% endif %} onclick="is_encryptedClicked()" />
+            <input type="password" name="encrypt_pass" id="encrypt_pass" value="" {% if note.is_encrypted %} required {% endif %} />
             <br>
             <br>
             <hr>
