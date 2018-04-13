@@ -10,7 +10,7 @@ News
 Version 1.0.1 released (05/04/2018)
 -----------------------------------
 
-** Changes in 1.0.1**
+**Changes in 1.0.1**
 
 * FIXED: added missing initial migrations
 
