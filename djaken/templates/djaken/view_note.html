@@ -4,9 +4,9 @@
 {% block extrastyle %}
 {{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "djaken/css/view_note.css" %}" />
 {% endblock %}
- 
+
 {% block title %}{{note.title}} | {{ site_title|default:_('Djaken') }}{% endblock %}
- 
+
 {% block content %}
     <div class="controls">
         <table class="outer">
@@ -15,13 +15,13 @@
                     <table class="inner">
                         <tr>
                             <td class="control_button">
-                                <a class="edit_button" href="{% url 'djaken:edit_note' note.pk %}"></a>
+                                <a class="edit_button" title="{% trans 'Edit note' %}" href="{% url 'djaken:edit_note' note.pk %}"></a>
                             </td>
                             <td class="control_buttons">
                                {% if note.relevant %}
-                                   <a href="{% url 'djaken:view_note_toggle_relevant' note.pk %}" class="toggle-control toggle-on"></a>
+                                   <a title="{% trans 'Set as irrelevant' %}" href="{% url 'djaken:view_note_toggle_relevant' note.pk %}" class="toggle-control toggle-on"></a>
                                {% else %}
-                                   <a href="{% url 'djaken:view_note_toggle_relevant' note.pk %}" class="toggle-control"></a>
+                                   <a title="{% trans 'Set as relevant' %}" href="{% url 'djaken:view_note_toggle_relevant' note.pk %}" class="toggle-control"></a>
                                {% endif %}
                             </td>
                         </tr>
@@ -48,19 +48,22 @@
             </p>
         {% endif %}
         <p>
-            Modified on
+            {% trans 'Modified on' %}
             <time datetime="{{note.modified|date:"c"}}">
                 {{note.modified|date}}
             </time>
         </p>
         <p>
-            Created on
+            {% trans 'Created on' %}
             <time datetime="{{note.created|date:"c"}}">
                 {{note.created|date}}
             </time>
         </p>
     </div>
     <script type="text/javascript">
+        window.onload = function() {
+            history.replaceState("", "", "/view_note/{{note.id}}");
+        }
         var links = document.links;
         for (var i = 0, linksLength = links.length; i < linksLength; i++) {
              if (links[i].hostname != window.location.hostname) {

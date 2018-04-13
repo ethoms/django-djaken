@@ -3,7 +3,6 @@ from django.contrib.auth import logout as auth_logout, REDIRECT_FIELD_NAME
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.views.decorators.cache import cache_control
 from django.views.decorators.cache import never_cache
 from django.conf import settings
 from django.db.models import Q
@@ -78,7 +77,7 @@ def logout(request, extra_context=None):
     auth_logout(request)
     return redirect('djaken:login') 
 
-
+@never_cache
 def all_notes(request, **kwargs):
 
     next_url = None
@@ -165,7 +164,7 @@ def all_notes(request, **kwargs):
     else:
         return redirect('djaken:login')
 
-
+@never_cache
 def view_note(request, pk, **kwargs):
 
     next_url = None
@@ -205,7 +204,7 @@ def view_note(request, pk, **kwargs):
     else:
         return redirect('djaken:login')
 
-
+@never_cache
 def edit_note(request, pk, **kwargs):
 
     next_url = None
@@ -245,7 +244,7 @@ def edit_note(request, pk, **kwargs):
     else:
         return redirect('djaken:login')
 
-
+@never_cache
 def unlock_note(request, pk, **kwargs):
 
     next_url = None
@@ -298,6 +297,7 @@ def unlock_note(request, pk, **kwargs):
     else:
         return redirect('djaken:login')
 
+@never_cache
 def save_note(request, pk, **kwargs):
 
     next_url = None
@@ -345,6 +345,7 @@ def save_note(request, pk, **kwargs):
     else:
         return redirect('djaken:login')
 
+@never_cache
 def new_note(request, **kwargs):
 
     next_url = None

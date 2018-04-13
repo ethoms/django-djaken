@@ -2,7 +2,7 @@
 {% load i18n static %}
 
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "djaken/css/all_notes.css" %}" />{% endblock %}
- 
+
 {% block content %}
     <div class="search_and_new">
         <table class="outer">
@@ -11,24 +11,24 @@
                     <table class="inner">
                         <tr>
                             <td> 
-                                <a class="search_button" id="search_button" href="{% url 'djaken:all_notes' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{ search_text }}"></a>
-                            </td> 
-                            <td> 
+                                <a class="search_button" id="search_button" title="{% trans 'Search within note' %}" href="{% url 'djaken:all_notes' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{ search_text }}"></a>
+                            </td>
+                            <td>
                                 <form>
                                     <input type="text" id="search_text" name="search" value="{{ search_text }}" maxlength="255" onchange="getSearchText()" onkeypress="return searchKeyPress(event)" />
                                     <input type="hidden" id="sort_order" value="{{sort_order}}" />
                                     <input type="hidden" id="only_relevant" value="{{only_relevant}}" />
                                 </form>
-                            </td> 
-                            <td> 
-                                <a class="erase_button" id="search_button" href="{% url 'djaken:all_notes' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search="></a>
-                            </td> 
+                            </td>
+                            <td>
+                                <a class="erase_button" id="erase_button" title="{% trans 'Clear search criteria' %}"  href="{% url 'djaken:all_notes' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search="></a>
+                            </td>
                         </tr>
                     </table>
                 </td>
-                <td class="new_note_button"> 
-                    <a class="new_note_button" href="{% url 'djaken:new_note' %}"></a>
-                </td> 
+                <td class="new_note_button">
+                    <a class="new_note_button" title="{% trans 'New note' %}" href="{% url 'djaken:new_note' %}"></a>
+                </td>
             </tr>
         </table>
     </div>
@@ -55,22 +55,22 @@
                                </td>
                                <td class="filter_buttons">
                                    {% if item == "-relevant" %}
-                                       <a href="{% url 'djaken:all_notes_sort_by_relevant' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{search_text}}"> <div class="arrow_down"> </div> </a>
+                                       <a title="{% trans 'Sort by ascending relevancy' %}" href="{% url 'djaken:all_notes_sort_by_relevant' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{search_text}}"> <div class="arrow_down"> </div> </a>
                                    {% endif %}
                                    {% if item == "relevant" %}
-                                       <a href="{% url 'djaken:all_notes_sort_by_relevant' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{search_text}}"> <div class="arrow_up"> </div> </a>
+                                       <a title="{% trans 'Sort by descending relevancy' %}" href="{% url 'djaken:all_notes_sort_by_relevant' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{search_text}}"> <div class="arrow_up"> </div> </a>
                                    {% endif %}
                                    {% if item == "-modified" %}
-                                       <a href="{% url 'djaken:all_notes_sort_by_modified' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{search_text}}"> <div class="arrow_down"> </div> </a>
+                                       <a title="{% trans 'Sort by ascending modified time' %}" href="{% url 'djaken:all_notes_sort_by_modified' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{search_text}}"> <div class="arrow_down"> </div> </a>
                                    {% endif %}
                                    {% if item == "modified" %}
-                                       <a href="{% url 'djaken:all_notes_sort_by_modified' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{search_text}}"> <div class="arrow_up"> </div> </a>
+                                       <a title="{% trans 'Sort by descending modified time' %}" href="{% url 'djaken:all_notes_sort_by_modified' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{search_text}}"> <div class="arrow_up"> </div> </a>
                                    {% endif %}
                                    {% if item == "-created" %}
-                                       <a href="{% url 'djaken:all_notes_sort_by_created' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{search_text}}"> <div class="arrow_down"> </div> </a>
+                                       <a title="{% trans 'Sort by ascending created time' %}" href="{% url 'djaken:all_notes_sort_by_created' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{search_text}}"> <div class="arrow_down"> </div> </a>
                                    {% endif %}
                                    {% if item == "created" %}
-                                       <a href="{% url 'djaken:all_notes_sort_by_created' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{search_text}}"> <div class="arrow_up"> </div> </a>
+                                       <a title="{% trans 'Sort by descending created time' %}" href="{% url 'djaken:all_notes_sort_by_created' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{search_text}}"> <div class="arrow_up"> </div> </a>
                                    {% endif %}
                                </td>
                            {% endfor %}
@@ -79,9 +79,9 @@
                            </td>
                            <td class="filter_buttons">
                                {% if only_relevant == True %}
-                                   <a href="{% url 'djaken:all_notes_toggle_relevant' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{search_text}}" class="toggle-control toggle-on"></a>
+                                   <a title="{% trans 'Show irrelevant notes too' %}" href="{% url 'djaken:all_notes_toggle_relevant' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{search_text}}" class="toggle-control toggle-on"></a>
                                {% else %}
-                                   <a href="{% url 'djaken:all_notes_toggle_relevant' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{search_text}}" class="toggle-control"></a>
+                                   <a title="{% trans 'Show only relevant notes' %}" href="{% url 'djaken:all_notes_toggle_relevant' %}?sort_order={{sort_order}}&only_relevant={{only_relevant}}&search={{search_text}}" class="toggle-control"></a>
                                {% endif %}
                            </td>
                        </tr>
@@ -93,7 +93,7 @@
     {% for note in notes %}
     <div class="each_note">
         <h2>
-            <a href="{% url 'djaken:view_note' note.pk %}">
+            <a title="{% trans 'View this note' %}" href="{% url 'djaken:view_note' note.pk %}">
                 {{note.title}}
             </a>
         </h2>

@@ -1,0 +1,19 @@
+a:hover {
+    cursor: pointer;
+}
+
+a.unlock_note {
+    background: url(../img/icon-unlock-note.png) no-repeat center;
+    background-size: cover;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    margin: 0 10px;
+}
+
+input[type=submit]#unlock_note {
+    display: none;
+    width: 0;
+    height: 0;
+    margin: 0 0;
+}
