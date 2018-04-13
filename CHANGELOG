@@ -1,8 +1,30 @@
 Changelog
 =========
 
+2.0b1 (2018/04/14)
+------------------
+
+- Replace Markdown with reStructuredText.
+- Move inline images to seperate model (DB) field, 
+  thus avoiding search and markup processing on bulky image data. 
+  It also takes away the encoded image data from the markup text.
+- GUI: several improvements (HTMl templates and CSS).
+- GUI: Edit Note; change "Save and Close" button to icon and have all three 
+  save and close permutations at top and bottom of note.
+- CODING: Change 'Generic Views' back to regular/full Django views.
+- FIXED: Page reload after going back to unlock encrypted note re-submits 
+  encryption key (password).
+- Disable browser caching as much as possible.
+
+
+1.0.1 (2018/04/05)
+------------------
+
+* FIXED: added missing initial migrations
+
+
 1.0 (2018/03/30)
-~~~~~~~~~~~~~~~~
+----------------
 
 * FIXED: encrypted notes; unlock_note url without form data ('get' instead
   of 'post') should redirect to view_note instead of generating a 
@@ -13,8 +35,9 @@ Changelog
   with large inline attached images. To keep the same behaviour, the 
   option(s) will need to be set to True in the projects settings.py
 
+
 1.0rc3 (2016/04/03)
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 * FIXED: **CRITICAL BUG**; changing relevancy on encrypted notes causes note to be
   unable to unlock.
