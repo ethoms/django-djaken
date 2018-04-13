@@ -83,12 +83,12 @@ Screen-shots
 
 **View Note**
 
-.. image:: screenshots/djaken-view_note-1.png
+.. image:: screenshots/djaken-view_note-2.png
 
 **Edit Note**
 
-.. image:: screenshots/djaken-edit_note-1.png
+.. image:: screenshots/djaken-edit_note-2.png
 
 **Unlock an encrypted note**
 
-.. image:: screenshots/djaken-unlock_note-1.png
+.. image:: screenshots/djaken-unlock_note-2.png
