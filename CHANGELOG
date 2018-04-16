@@ -8,7 +8,7 @@ Changelog
 - Move inline images to seperate model (DB) field, 
   thus avoiding search and markup processing on bulky image data. 
   It also takes away the encoded image data from the markup text.
-- GUI: several improvements (HTMl templates and CSS).
+- GUI: several improvements (HTML templates and CSS).
 - GUI: Edit Note; change "Save and Close" button to icon and have all three 
   save and close permutations at top and bottom of note.
 - CODING: Change 'Generic Views' back to regular/full Django views.
