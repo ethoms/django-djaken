@@ -329,7 +329,7 @@ def save_note(request, pk, **kwargs):
             if image_data is not "":
                 image = note.image_set.create(image_data=image_data)
                 note.image_data_dict[str(image.id)] = image_data
-                new_content += "\r\n\r\n.. image:: [[[" + str(image.id) + "]]]\r\n\r\n"
+                new_content += "\r\n\r\n.. image:: [[[" + str(image.id) + "]]]\r\n    :alt: Image #" + str(image.id) + "\r\n\r\n"
 
             note.content = new_content
             note.save()

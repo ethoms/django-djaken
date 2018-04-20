@@ -132,30 +132,25 @@ blockquote {
     border-left: 5px solid #ddd;
 }
 
-code, pre {
-    margin: 10px;
+code, pre, span.pre, tt {
     font-family: "Roboto Mono", monospace;
     font-weight: 300;
     font-size: 12px;
 }
 
-pre {
-    color: #666;
+code, pre.code, pre.literal-block {
+    padding: 6px 8px;
+    margin: 10px;
 }
 
 pre.literal-block {
     background: #eee;
-    padding: 6px 8px;
-}
-
-code {
-    color: #fff;
+    color: #666;
 }
 
 code, pre.code {
-    color: #fff;
     background: #333;
-    padding: 6px 8px;
+    color: #fff;
 }
 
 code strong {
