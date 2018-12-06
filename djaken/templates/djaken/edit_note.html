@@ -52,7 +52,7 @@
             <td><div class="image_attach_selector">
             <input type="file" name="image_attach_selector" id="image_attach_selector" title="{% trans 'Select image' %}" accept="image/gif, image/jpeg, image/png" onchange="readURL(this)"/>
             </div></td>
-            <td><a class="save_button" id="image_attach_save" title="{% trans 'Save selected image' %}" style="display: none" onclick="return continueAfterSave()"></a></td>
+            <td><a class="save_button" id="image_attach_save" title="{% trans 'Save selected image' %}" style="display: none" onclick="return imageAttachSave()"></a></td>
             <td><a class="erase_button" id="image_attach_clear" title="{% trans 'Clear selected image' %}" style="display: none" onclick="return clearImageAttach()"></a></td>
             </tr></table>
             <br>
@@ -70,6 +70,7 @@
             <hr>
             <input type="hidden" name="preview_image_data" id="preview_image_data" value="" />
             <input type="hidden" name="continue_after_save" id="continue_after_save" value="False" />
+            <input type="hidden" name="attach_during_save" id="attach_during_save" value="False" />
             <input type="submit" id="save_form" value="{% trans 'Save & View' %}" />
             <br>
         </form>
@@ -141,13 +142,20 @@
         }
         function toggleImageAttachClearButton() {
             var btn = document.getElementById("image_attach_clear");
+            var imageAttachSelector = document.getElementById("image_attach_selector");
+            var imageAttachSelectorDiv = document.getElementsByClassName("image_attach_selector");
             if (btn.style.display === "none")
             {
                 btn.style.display = "block";
+                imageAttachSelector.setAttribute('disabled', 'disabled');
+                imageAttachSelectorDiv[0].style.opacity = "0.3";
             }
             else
             {
                 btn.style.display = "none";
+                imageAttachSelector.removeAttribute('disabled');
+                imageAttachSelectorDiv[0].style.opacity = "1.0";
+                imageAttachSelector.value = "";
             }
         }
         function clearImageAttach() {
@@ -175,6 +183,11 @@
         }
         function continueAfterSave() {
             document.getElementById("continue_after_save").value = "True";
+            document.getElementById("save_form").click();
+        }
+        function imageAttachSave() {
+            document.getElementById("continue_after_save").value = "True";
+            document.getElementById("attach_during_save").value = "True";
             document.getElementById("save_form").click();
         }
         function is_encryptedClicked() {

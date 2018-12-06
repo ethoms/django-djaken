@@ -23,6 +23,12 @@ class Note(models.Model):
     encryption_key = ""                                                            # Only used momentarily to pass the key to the save function
     image_data_dict = {}
 
+    def __init__(self, *args, **kwargs):
+
+        super(Note, self).__init__(*args, **kwargs)
+        # Ensure non-DB-backed variables are initialized/reset.
+        encryption_key = ""
+        self.image_data_dict = {}
 
     def get_html_from_reST(self, reST_text):
  

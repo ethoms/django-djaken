@@ -80,14 +80,14 @@ def logout(request, extra_context=None):
 @never_cache
 def all_notes(request, **kwargs):
 
+    options = dict(kwargs)  
+    ##print("views.py:all_notes:- options = ", options)
+
     next_url = None
     render_html_path = 'djaken/all_notes.html'
 
     if get_user_is_logged_in(request):
         if request.method == 'GET':
-
-            options = dict(kwargs)  
-            print("all_notes::get: options = ", options)
 
             # Set some defaults
             sort_order = ['-relevant','-modified','-created']
@@ -167,14 +167,14 @@ def all_notes(request, **kwargs):
 @never_cache
 def view_note(request, pk, **kwargs):
 
+    options = dict(kwargs)  
+    ##print("views.py:view_note:- options = ", options)
+
     next_url = None
     render_html_path = None
  
     if get_user_is_logged_in(request):
         if request.method == 'GET':
-
-            options = dict(kwargs)  
-            print("view_note::get: options = ", options)
 
             note = get_object_or_404(Note, pk=pk, author=request.user)
             if 'toggle_relevant' in options.keys():
@@ -207,14 +207,14 @@ def view_note(request, pk, **kwargs):
 @never_cache
 def edit_note(request, pk, **kwargs):
 
+    options = dict(kwargs)
+    ##print("views.py:edit_note:- options = ", options)
+
     next_url = None
     render_html_path = None
 
     if get_user_is_logged_in(request):
         if request.method == 'GET':
-
-            options = dict(kwargs)
-            print("edit_note::get: options = ", options)
 
             note = get_object_or_404(Note, pk=pk, author=request.user)
             if 'toggle_relevant' in options.keys():
@@ -247,6 +247,9 @@ def edit_note(request, pk, **kwargs):
 @never_cache
 def unlock_note(request, pk, **kwargs):
 
+    options = dict(kwargs)
+    ##print("views.py:unlock_note:- options = ", options)
+
     next_url = None
     render_html_path = None
 
@@ -254,14 +257,9 @@ def unlock_note(request, pk, **kwargs):
 
         if request.method == 'GET':
 
-            options = dict(kwargs)
-            print("unlock_note::get: options = ", options)
-
             return redirect('/view_note/' + pk + '/')
 
         if request.method == 'POST':
-
-            print("unlock_note::post:")
 
             note = get_object_or_404(Note, pk=pk, author=request.user)
             render_html_path = request.POST['next_url']
@@ -300,20 +298,18 @@ def unlock_note(request, pk, **kwargs):
 @never_cache
 def save_note(request, pk, **kwargs):
 
+    options = dict(kwargs)
+    ##print("views.py:save_note:- options = ", options)
+
     next_url = None
 
     if get_user_is_logged_in(request):
 
         if request.method == 'GET':
 
-            options = dict(kwargs)
-            print("save_note::get: options = ", options)
-
             return redirect('/view_note/' + pk + '/')
 
         if request.method == 'POST':
-
-            print("save_note::post:")
 
             note = get_object_or_404(Note, pk=pk, author=request.user)
             new_title = request.POST['note_title']
@@ -326,7 +322,7 @@ def save_note(request, pk, **kwargs):
             note.is_encrypted = is_encrypted
             note.encryption_key = encryption_key
 
-            if image_data is not "":
+            if request.POST['attach_during_save'] == "True" and image_data is not "":
                 image = note.image_set.create(image_data=image_data)
                 note.image_data_dict[str(image.id)] = image_data
                 new_content += "\r\n\r\n.. image:: [[[" + str(image.id) + "]]]\r\n    :alt: Image #" + str(image.id) + "\r\n\r\n"
@@ -348,14 +344,14 @@ def save_note(request, pk, **kwargs):
 @never_cache
 def new_note(request, **kwargs):
 
+    options = dict(kwargs)
+    ##print("views.py:new_note:- options = ", options)
+
     next_url = None
     render_html_path = 'djaken/edit_note.html'
 
     if get_user_is_logged_in(request):
         if request.method == 'GET':
-
-            options = dict(kwargs)
-            print("new_note::get: options = ", options)
 
             note = Note(title=ugettext_lazy('New note...'), author=request.user)
             note.save()
