@@ -7,6 +7,9 @@ Djaken is a complete web-based notes application for Django.
 News
 ----
 
+Version 2.0rc1 released! (2018/12/06)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 Version 2.0b1 released! (2018/04/14)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -32,7 +35,7 @@ Features
 - Login/logout of the notes application.
 - Create and edit notes in reStructuredText.
 - Attach inline images (within a note).
-- Notes can be marked 'Not relevant' and are kept out of view by default.
+- Notes can be marked 'Not relevant', and if so, are kept out of view by default.
 - Encrypted notes (stored in database using an AES symmetric cipher).
 - Keyword search of note title and content.
 - Sort by modified/created date.

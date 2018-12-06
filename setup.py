@@ -9,7 +9,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-djaken',
-    version='2.0b1',
+    version='2.0rc1',
     packages=['djaken'],
     include_package_data=True,
     license='BSD License',
@@ -30,10 +30,10 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
     install_requires=['Django>=1.9','docutils>=0.12', 'pycrypto>=2.6', ],
     keywords='django notes markdown encrypt',
 )
-

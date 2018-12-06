@@ -1,6 +1,14 @@
 Changelog
 =========
 
+2.0rc1 (2018/12/06)
+-------------------
+
+- FIXED: Exception 'DoesNotExist:Image matching query does not exist' after ain 'Image Attach' save_note.
+- FIXED: 'Attach Image' workflow now has proper state control (buttons).
+  The note models' non-DB-members were persistent, so a reset is needed in __init__.   
+- ENHANCEMENT: Only attach image during a save triggered from the image preview save button.
+
 2.0b1 (2018/04/14)
 ------------------
 
