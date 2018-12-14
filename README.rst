@@ -7,7 +7,7 @@ Djaken is a complete web-based notes application for Django.
 News
 ----
 
-Version 2.0.1 released! (2018/12/14)
+Version 2.0.2 released! (2018/12/15)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Version 2.0rc1 released! (2018/12/06)
