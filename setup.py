@@ -34,6 +34,6 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
-    install_requires=['Django>=1.9','docutils>=0.12', 'pycrypto>=2.6', ],
+    install_requires=['Django>=1.9,<2.0','docutils>=0.12', 'pycrypto>=2.6', ],
     keywords='django notes markdown encrypt',
 )
