@@ -33,6 +33,39 @@ div.controls table.outer td.control_button {
     text-align: right;
 }
 
+div.note_content table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+div.note_content td, div.note_content th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    font-size: inherit;
+}
+
+div.note_content tr:nth-child(even) {
+    background-color: #F2F2F2;
+}
+
+div.note_content tr:hover {
+    background-color: #DDD;
+}
+
+div.note_content th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #BED5E0;
+}
+
+div.note_content thead th {
+    text-transform: none;
+    color: #333;
+    font-weight: 700;
+    font-size: inherit;
+}
+
 a.edit_button {
     background: url(../img/icon-edit-note.png) no-repeat center;
     background-size: cover;

@@ -134,8 +134,9 @@ blockquote {
 
 code, pre, span.pre, tt {
     font-family: "Roboto Mono", monospace;
-    font-weight: 300;
+    font-weight: 400;
     font-size: 12px;
+    overflow: auto;
 }
 
 code, pre.code, pre.literal-block {
@@ -145,12 +146,12 @@ code, pre.code, pre.literal-block {
 
 pre.literal-block {
     background: #eee;
-    color: #666;
+    color: #444;
 }
 
 code, pre.code {
     background: #333;
-    color: #fff;
+    color: #ddd;
 }
 
 code strong {
