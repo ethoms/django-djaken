@@ -10,7 +10,7 @@ import hashlib
 
 class Note(models.Model):
 
-    author = models.ForeignKey('auth.User')
+    author = models.ForeignKey('auth.User', on_delete=models.PROTECT)
     title = models.CharField(max_length=255)
     content = models.TextField(blank=True)
     content_html = models.TextField(blank=True, editable=False)                    # don't want to see this in Admin
