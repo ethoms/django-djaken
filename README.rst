@@ -7,11 +7,11 @@ Djaken is a complete web-based notes application for Django.
 News
 ----
 
-Version 2.0 released! (2018/12/14)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Version 2.0.1 released! (2018/12/14)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Version 2.0rc1 released! (2018/12/06)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Version 2.0b1 released! (2018/04/14)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -72,7 +72,7 @@ Quick start
 
     url(r'^djaken/', include('djaken.urls')),
 
-3. Run `python manage.py migrate` to create the djaken models.
+3. Run ``python manage.py migrate`` to create the djaken models.
 
 4. Start the development server and visit http://127.0.0.1:8000/djaken/
    to start adding notes.
